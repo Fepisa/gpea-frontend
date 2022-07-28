@@ -1,0 +1,28 @@
+<div class="table-container mat-elevation-z8">
+    <mat-table [dataSource]="dataSourceDetalhe">
+
+        <ng-container matColumnDef="image">
+            <mat-header-cell *matHeaderCellDef>Image</mat-header-cell>
+
+            <mat-cell *matCellDef="let element">
+                <a [attr.href]="element.image" target="_blank">
+                    <img [src]="element.image" style="width: 200px; height: 200px">
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+            <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-icon-button title="Excluir" (click)="deleteImagem(element.id)">
+                    <mat-icon aria-label="Botão de Exclusão">
+                        delete
+                    </mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+      
+        <mat-header-row *matHeaderRowDef="displayedColumnsDetalhe"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsDetalhe;"></mat-row>
+    </mat-table>
+</div>

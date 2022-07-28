@@ -1,0 +1,35 @@
+.inner-content {
+    padding: 16px;
+  }
+  
+  .full-input {
+    width: 100%;
+  }
+  
+  .search-form {
+    min-width: 20%;
+    max-width: 50%;
+    width: 100%;
+  }
+  
+  .table-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .table-result {
+    flex: 1;
+    overflow: auto;
+  }
+  
+  .hidden-column {
+    display: none;
+  }
+  
+  .table-button-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+  

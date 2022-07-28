@@ -18,7 +18,7 @@ const routes: Routes = [
       loadChildren: () => import('./private/private.module').then(m => m.PrivateModule)
     }]
   }, {
-    path: '',
+    path: '**',
     redirectTo: 'private',
     pathMatch: 'full'
   }

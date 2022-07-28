@@ -11,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { LoginComponent } from './login/login.component';
 import { PrivateComponent } from './private/private.component';
 import { AuthGuard } from './guards/auth.guard';
@@ -33,7 +34,8 @@ import { AuthService } from './services/auth.service';
     MatCardModule,
     MatFormFieldModule, 
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatToolbarModule
   ],
   providers: [
     AuthGuard,
