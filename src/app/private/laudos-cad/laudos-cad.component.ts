@@ -94,7 +94,7 @@ export class LaudosCadComponent implements OnInit {
         },
         error: (err) => {
           console.log(err);
-          alert('Ocorreu um erro ao atualizar o laudo!');
+          alert('Ocorreu um erro ao atualizar o laudo! ' + err.error.message);
         }
       });  
     } else {
@@ -105,7 +105,7 @@ export class LaudosCadComponent implements OnInit {
         },
         error: (err) => {
           console.log(err);
-          alert('Ocorreu um erro ao registrar o laudo!');
+          alert('Ocorreu um erro ao registrar o laudo! ' + err.error.message);
         }
       });
     }
