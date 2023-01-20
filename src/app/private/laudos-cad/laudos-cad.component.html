@@ -19,9 +19,6 @@
         <input matInput placeholder="Tipo" formControlName="tipo">
       </mat-form-field>
       <mat-form-field class="full-input">
-        <input matInput placeholder="Empresa" formControlName="empresa">
-      </mat-form-field>
-      <mat-form-field class="full-input">
         <input matInput placeholder="Local Geral" formControlName="local_geral">
       </mat-form-field>
       <mat-form-field class="full-input">
@@ -34,49 +31,26 @@
         <mat-datepicker #dpData></mat-datepicker>
       </mat-form-field>
       <mat-form-field class="full-input">
-        <input matInput placeholder="Contrato" formControlName="contrato">
+        <mat-label>Validade</mat-label>
+        <input matInput [matDatepicker]="dpValidade" formControlName="validade" (dateChange)="verificarValidade()">
+        <mat-datepicker-toggle matSuffix [for]="dpValidade"></mat-datepicker-toggle>
+        <mat-datepicker #dpValidade></mat-datepicker>
       </mat-form-field>
       <mat-form-field class="full-input">
-        <input matInput placeholder="CREA" formControlName="crea">
+        <input matInput placeholder="Relatório" formControlName="relatorio">
       </mat-form-field>
       <mat-form-field class="full-input">
-        <input matInput placeholder="ART" formControlName="art">
+        <input matInput placeholder="Resp. Técnico" formControlName="responsavel_tecnico">
       </mat-form-field>
       <mat-form-field class="full-input">
-        <input matInput placeholder="Capacidade Un." formControlName="capacidade_2">
+        <input matInput placeholder="Contratante" formControlName="contratante">
       </mat-form-field>
       <mat-form-field class="full-input">
-        <input matInput placeholder="Massa" formControlName="massa_2">
+        <input matInput placeholder="Contratada" formControlName="contratada">
       </mat-form-field>
       <mat-form-field class="full-input">
-        <input matInput placeholder="Quantidade" formControlName="quantidade_2">
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Tipo" formControlName="tipo_2">
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Empresa" formControlName="empresa_2">
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Local Geral" formControlName="local_geral_2">
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Local Específico" formControlName="local_especifico_2">
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <mat-label>Data</mat-label>
-        <input matInput [matDatepicker]="dpData2" formControlName="data_2">
-        <mat-datepicker-toggle matSuffix [for]="dpData2"></mat-datepicker-toggle>
-        <mat-datepicker #dpData2></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Contrato" formControlName="contrato_2">
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="CREA" formControlName="crea_2">
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="ART" formControlName="art_2">
+        <input matInput placeholder="Observação" formControlName="observacao"
+          [ngStyle]="{color: colorObs, fontWeight: 'bold' }">
       </mat-form-field>
       <div>
         <button mat-raised-button name="action" (click)="save()">
