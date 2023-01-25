@@ -73,7 +73,7 @@ export class LaudosCadComponent implements OnInit {
     let dataAtual = moment().startOf('day');
     if (validade != null && validade !== '') {
       if (dataAtual.isAfter(validade)) {
-        this.formulario.get('observacao')?.setValue('LAUDO VENCIDO! NÃO UTILIZAR!');
+        this.formulario.get('observacao')?.setValue('REPROVADO! LAUDO VENCIDO! NÃO UTILIZAR!');
         this.colorObs = 'red';
       } else {
         this.formulario.get('observacao')?.setValue('UTILIZAR APÓS INSPEÇÃO VISUAL')
