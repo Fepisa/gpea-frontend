@@ -67,6 +67,20 @@ export class LaudoService {
     return this.http.post(`${this.uri}/${id}?_method=PATCH`, data, { headers });
   }
 
+  updateObservacao(data: any): Observable<any> {
+    let auth = null;
+    const lsGpea = localStorage.getItem('gpea');
+    if (typeof lsGpea === 'string') {
+      auth = JSON.parse(lsGpea);
+    }
+    let headers = new HttpHeaders({
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ' + auth.token
+    });
+
+    return this.http.post(`${this.uri}/observacao?_method=PATCH`, data, { headers });
+  }
+
   deleteLaudo(id: any): Observable<any> {
     let auth = null;
     const lsGpea = localStorage.getItem('gpea');

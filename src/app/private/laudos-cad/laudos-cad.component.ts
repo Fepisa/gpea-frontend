@@ -44,6 +44,7 @@ export class LaudosCadComponent implements OnInit {
         this.formulario.get('contratante')?.setValue(result.data.contratante);
         this.formulario.get('contratada')?.setValue(result.data.contratada);
         this.verificarValidade();
+        this.atualizaObservacao();
       });
     }
   }
@@ -82,8 +83,20 @@ export class LaudosCadComponent implements OnInit {
     }
   }
 
+  atualizaObservacao() {
+    let data = {
+      id: this.id,
+      observacao: this.formulario.get('observacao')?.value
+    }
+    this.service.updateObservacao(data).subscribe({
+      next: (result: any) => {
+        console.log('Observação do laudo ' + result.data.codigo + ' atualizado!');
+      }
+    });
+  }
+
   save() {
-    let data = this.formulario.value;
+    let data = this.formulario.getRawValue();
     data.data = data.data ? moment(data.data).format("DD/MM/YYYY") : "";
     data.validade = data.validade ? moment(data.validade).format("DD/MM/YYYY") : "";
     if (this.edicao) {
