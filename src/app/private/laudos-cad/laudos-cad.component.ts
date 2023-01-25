@@ -76,7 +76,7 @@ export class LaudosCadComponent implements OnInit {
         this.formulario.get('observacao')?.setValue('REPROVADO! LAUDO VENCIDO! NÃO UTILIZAR!');
         this.colorObs = 'red';
       } else {
-        this.formulario.get('observacao')?.setValue('UTILIZAR APÓS INSPEÇÃO VISUAL')
+        this.formulario.get('observacao')?.setValue('APROVADO! UTILIZAR APÓS INSPEÇÃO VISUAL!')
         this.colorObs = 'green';
       }
     }
