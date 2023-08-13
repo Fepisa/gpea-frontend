@@ -36,7 +36,14 @@ export class LoginComponent implements OnInit {
         const username = this.loginForm.get('email')?.value;
         let expireDate = new Date();
         expireDate.setSeconds(expireDate.getSeconds() + 86400);
-        localStorage.setItem('gpea', JSON.stringify({username, token: data.data.token, expires: expireDate}));
+        localStorage.setItem('gpea', JSON.stringify({
+          username, 
+          token: data.data.token, 
+          empresa: data.data.empresa,
+          local: data.data.local,
+          roles: data.data.roles, 
+          expires: expireDate
+        }));
         this.router.navigate(['private']);
       },
       error: (err) => {

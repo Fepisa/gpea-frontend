@@ -1,6 +1,7 @@
 <div class="inner-content">
     <div>
-      <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="novoUser()">
+      <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="novoUser()" 
+          *ngIf="userRoleAdmin">
           Novo Usuário
       </button>
       <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="laudos()">
@@ -11,35 +12,58 @@
       </button>
     </div>
     <div class="table-container mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource" class="table-result">
+      <mat-table [dataSource]="dataSource" class="table-result">
+
+          <ng-container matColumnDef="visualiza">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let row; let index=index">
+                  <button mat-icon-button (click)="expandRow(index, row)">
+                      <mat-icon aria-label="Botão de visualização">
+                          add
+                      </mat-icon>
+                  </button>
+              </mat-cell>
+          </ng-container>
   
           <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Nome</th>
+              <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
   
-              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
           </ng-container>
   
           <ng-container matColumnDef="email">
-              <th mat-header-cell *matHeaderCellDef>E-mail</th>
+              <mat-header-cell *matHeaderCellDef>E-mail</mat-header-cell>
   
-              <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+              <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="empresa">
+              <mat-header-cell *matHeaderCellDef>Empresa</mat-header-cell>
+  
+              <mat-cell *matCellDef="let element"> {{element.empresa}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="local">
+              <mat-header-cell *matHeaderCellDef>Local</mat-header-cell>
+  
+              <mat-cell *matCellDef="let element"> {{element.local}} </mat-cell>
           </ng-container>
     
           <ng-container matColumnDef="acoes">
-              <th mat-header-cell *matHeaderCellDef>Ações</th>
-              <td mat-cell *matCellDef="let element">
+              <mat-header-cell mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
+              <mat-cell *matCellDef="let element">
   
                   <button mat-icon-button title="Editar" (click)="editarUser(element.id)">
                       <mat-icon aria-label="Botão de Edição">
                           mode
                       </mat-icon>
                   </button>
-              </td>
+              </mat-cell>
           </ng-container>
         
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" #matrow></mat-row>
+      </mat-table>
   
       <ngx-skeleton-loader *ngIf="!contentLoaded"
                            count="5" animation="progress"

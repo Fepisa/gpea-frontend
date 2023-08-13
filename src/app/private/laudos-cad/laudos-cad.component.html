@@ -53,10 +53,10 @@
           [ngStyle]="{color: colorObs, fontWeight: 'bold' }">
       </mat-form-field>
       <div>
-        <button mat-raised-button name="action" (click)="save()">
+        <button mat-raised-button name="action" (click)="save()" *ngIf="userRoleAdmin">
             <mat-icon>save</mat-icon> Salvar
         </button>
-        <button mat-raised-button name="limpar" (click)="reset()">
+        <button mat-raised-button name="limpar" (click)="reset()" *ngIf="userRoleAdmin">
             <mat-icon>delete</mat-icon> Limpar
         </button>
         <button mat-raised-button name="voltar" (click)="voltar()">

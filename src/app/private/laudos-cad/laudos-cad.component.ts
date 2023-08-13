@@ -19,16 +19,56 @@ export class LaudosCadComponent implements OnInit {
 
   colorObs = 'green';
 
+  userRoleAdmin: boolean = false;
+
   constructor(private route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, 
     private service: LaudoService) { }
 
   ngOnInit(): void {
+    let auth = null;
+    const lsGpea = localStorage.getItem('gpea');
+    if (typeof lsGpea === 'string') {
+      auth = JSON.parse(lsGpea);
+    }
+    let roles = auth.roles;
+    this.userRoleAdmin = roles.find((element: any) => element === 'Admin');
     this.createForm();
     this.edicao = false;
     this.id = this.route.snapshot.params['id'];
     if (this.id) {
       this.service.getLaudoById(this.id).subscribe(result => {
-        this.edicao = true;
+        if (!this.userRoleAdmin) {
+          this.formulario.get('codigo')?.disable();
+          this.formulario.get('descricao')?.disable();
+          this.formulario.get('capacidade')?.disable();
+          this.formulario.get('massa')?.disable();
+          this.formulario.get('quantidade')?.disable();
+          this.formulario.get('tipo')?.disable();
+          this.formulario.get('local_geral')?.disable();
+          this.formulario.get('local_especifico')?.disable();
+          this.formulario.get('data')?.disable();
+          this.formulario.get('validade')?.disable();
+          this.formulario.get('relatorio')?.disable();
+          this.formulario.get('responsavel_tecnico')?.disable();
+          this.formulario.get('contratante')?.disable();
+          this.formulario.get('contratada')?.disable();
+        } else {
+          this.edicao = true;
+          this.formulario.get('codigo')?.enable();
+          this.formulario.get('descricao')?.enable();
+          this.formulario.get('capacidade')?.enable();
+          this.formulario.get('massa')?.enable();
+          this.formulario.get('quantidade')?.enable();
+          this.formulario.get('tipo')?.enable();
+          this.formulario.get('local_geral')?.enable();
+          this.formulario.get('local_especifico')?.enable();
+          this.formulario.get('data')?.enable();
+          this.formulario.get('validade')?.enable();
+          this.formulario.get('relatorio')?.enable();
+          this.formulario.get('responsavel_tecnico')?.enable();
+          this.formulario.get('contratante')?.enable();
+          this.formulario.get('contratada')?.enable();
+        }
         this.formulario.get('codigo')?.setValue(result.data.codigo);
         this.formulario.get('descricao')?.setValue(result.data.descricao);
         this.formulario.get('capacidade')?.setValue(result.data.capacidade);

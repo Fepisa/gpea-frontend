@@ -18,6 +18,12 @@
             {{ hide_c ? 'visibility' : 'visibility_off'}}
         </mat-icon>
       </mat-form-field>
+      <mat-form-field class="full-input">
+        <input matInput placeholder="Empresa" formControlName="empresa">
+      </mat-form-field>
+      <mat-form-field class="full-input">
+        <input matInput placeholder="Local" formControlName="local">
+      </mat-form-field>
       <div>
         <button mat-raised-button name="action" (click)="save()">
             <mat-icon>save</mat-icon> Salvar

@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class ImageService {
 
-  private uri = 'http://localhost:8000/api/image';
+  private uri = 'https://scan.gpea.eng.br/gpea-api/public/api/image';
+  // private uri = 'http://localhost:8000/api/image';
 
   constructor(private http: HttpClient) { }
 

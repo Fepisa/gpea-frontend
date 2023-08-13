@@ -4,8 +4,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
@@ -22,6 +24,8 @@ import { LaudosCadComponent } from './laudos-cad/laudos-cad.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { UsersCadComponent } from './users-cad/users-cad.component';
 import { DetalheComponent } from './laudos-list/detalhe.component';
+import { RoleComponent } from './users-list/role.component';
+import { LaudosImportComponent } from './laudos-import/laudos-import.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +33,9 @@ import { DetalheComponent } from './laudos-list/detalhe.component';
     LaudosCadComponent,
     UsersListComponent,
     UsersCadComponent,
-    DetalheComponent
+    DetalheComponent, 
+    RoleComponent, 
+    LaudosImportComponent 
   ],
   imports: [
     CommonModule,
@@ -38,7 +44,9 @@ import { DetalheComponent } from './laudos-list/detalhe.component';
     MatTabsModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatProgressBarModule,
     MatInputModule,
+    MatRadioModule,
     MatIconModule,
     MatTableModule,
     MatSortModule,

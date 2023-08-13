@@ -1,7 +1,15 @@
 <div class="inner-content">
   <div>
-    <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="novoLaudo()">
+    <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="novoLaudo()"
+        *ngIf="userRoleAdmin">
         Novo Laudo
+    </button>
+    <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="importarLaudo()"
+        *ngIf="userRoleAdmin">
+        Importar Laudos
+    </button>
+    <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="exportarLaudo()">
+        Exportar Laudos
     </button>
     <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="usuarios()">
         Usuários
@@ -45,7 +53,7 @@
         <ng-container matColumnDef="acoes">
             <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <button mat-icon-button title="Adicionar Imagem" (click)="fileUpload.click()">
+                <button mat-icon-button title="Adicionar Imagem" (click)="fileUpload.click()" *ngIf="userRoleAdmin">
                     <mat-icon aria-label="Botão de Adicionar Imagem">
                         image
                     </mat-icon>
@@ -55,7 +63,7 @@
                         mode
                     </mat-icon>
                 </button>
-                <button mat-icon-button title="Excluir" (click)="deleteLaudo(element.id)">
+                <button mat-icon-button title="Excluir" (click)="deleteLaudo(element.id)" *ngIf="userRoleAdmin">
                     <mat-icon aria-label="Botão de Exclusão">
                         delete
                     </mat-icon>

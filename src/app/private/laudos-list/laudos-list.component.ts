@@ -17,6 +17,7 @@ export class LaudosListComponent implements OnInit {
   contentLoaded = false;
   displayedColumns: string[] = ['visualiza', 'codigo', 'descricao', 'data', 'acoes'];
   expandedRow!: number;
+  userRoleAdmin: boolean = false;
 
   dataSource: any = [];
   @Input('isPagination') isPagination!: boolean;
@@ -39,12 +40,29 @@ export class LaudosListComponent implements OnInit {
 
   loadData(): void {
     this.contentLoaded = false;
-    this.service.getLaudos().subscribe(result => {
-      this.dataSource = new MatTableDataSource<any>(result.data);
-      this.contentLoaded = true;
-      this.isPagination = true;
-      this.expandedRow = -1;
-    });
+    this.isPagination = false;
+    let auth = null;
+    const lsGpea = localStorage.getItem('gpea');
+    if (typeof lsGpea === 'string') {
+      auth = JSON.parse(lsGpea);
+    }
+    let roles = auth.roles;
+    this.userRoleAdmin = roles.find((element: any) => element === 'Admin');
+    if (this.userRoleAdmin) {
+      this.service.getLaudos().subscribe(result => {
+        this.dataSource = new MatTableDataSource<any>(result.data);
+        this.contentLoaded = true;
+        this.isPagination = true;
+        this.expandedRow = -1;
+      });
+    } else {
+      this.service.getLaudoByLocalGeralAndContratante(auth.local, auth.empresa).subscribe(result => {
+        this.dataSource = new MatTableDataSource<any>(result.data);
+        this.contentLoaded = true;
+        this.isPagination = true;
+        this.expandedRow = -1;
+      });
+    }
   }
 
   onFileSelected(codigo: any, event: any) {
@@ -64,6 +82,21 @@ export class LaudosListComponent implements OnInit {
         }
       });
     }
+  }
+
+  importarLaudo(): void {
+    this.router.navigate(['private', 'laudos', 'import']);
+  }
+
+  exportarLaudo(): void {
+    this.service.download().subscribe(data => this.service.downloadFile(data)),
+      (error: any) => {
+        console.log(error);
+        alert('Erro ao realizar o download do arquivo!');
+      }, 
+      () => {
+        alert('Download realizado com sucesso!');
+      }
   }
 
   novoLaudo(): void {

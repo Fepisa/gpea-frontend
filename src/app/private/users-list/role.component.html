@@ -1,0 +1,16 @@
+<div class="inner-content">
+    <form [formGroup]="formulario" class="cad-form">
+      <mat-radio-group aria-label="Selecione uma opção" formControlName="role" *ngIf="userRoleAdmin">
+        <mat-radio-button value="Viewer" class="radio-btns">Leitor</mat-radio-button>
+        <mat-radio-button value="Admin" class="radio-btns">Administrador</mat-radio-button>
+      </mat-radio-group>
+      <mat-form-field class="full-input" *ngIf="!userRoleAdmin">
+        <input matInput placeholder="Permissão" formControlName="role">
+      </mat-form-field>
+      <div class="btns" *ngIf="userRoleAdmin">
+        <button mat-raised-button name="action" (click)="updateRole()">
+            <mat-icon>save</mat-icon> Atualizar
+        </button>
+      </div>
+    </form>
+</div>

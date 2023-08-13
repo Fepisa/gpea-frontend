@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
-  uri = 'http://localhost:8000/api/login';
+  uri = 'https://scan.gpea.eng.br/gpea-api/public/api/login';
+  // uri = 'http://localhost:8000/api/login';
 
   constructor(private http: HttpClient) { }
 

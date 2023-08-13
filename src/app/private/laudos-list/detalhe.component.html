@@ -14,7 +14,7 @@
         <ng-container matColumnDef="acoes">
             <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <button mat-icon-button title="Excluir" (click)="deleteImagem(element.id)">
+                <button mat-icon-button title="Excluir" (click)="deleteImagem(element.id)" *ngIf="parentComponent.userRoleAdmin">
                     <mat-icon aria-label="Botão de Exclusão">
                         delete
                     </mat-icon>

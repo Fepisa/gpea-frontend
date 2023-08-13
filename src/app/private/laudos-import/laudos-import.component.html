@@ -1,0 +1,27 @@
+<div class="inner-content" style="padding: 20px">
+  <h3><strong>Indique o arquivo no campo abaixo:</strong></h3>
+  <div *ngIf="currentFile">
+    <mat-progress-bar
+      class="example-margin"
+      [color]="color"
+      [mode]="mode"
+      [value]="progress"
+      [bufferValue]="bufferValue">
+    </mat-progress-bar>
+  </div>
+  <div style="margin-top: 10px">
+    <button mat-raised-button (click)="fileInput.click()">Escolher Arquivo</button>
+    {{ fileInput.files!.length ? fileInput.files![0].name : ''}}
+    <input hidden type="file" (change)="selectFile($event)" alt="" #fileInput />
+  </div>
+  <div style="margin-top: 20px">
+    <button mat-raised-button [disabled]="!selectedFiles" (click)="upload()" style="margin-right: 10px;">
+      <mat-icon>save</mat-icon> Upload
+    </button>
+    <button mat-raised-button (click)="voltar()">
+      <mat-icon>arrow_back</mat-icon> Voltar
+    </button>                                          
+    <div class="alert alert-light" role="alert">{{ message }}</div>
+  </div>
+</div>
+  
