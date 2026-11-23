@@ -18,6 +18,32 @@
         Sair
     </button>
   </div>
+  <form class="filtro-container" [formGroup]="filtro">
+    <mat-form-field class="filtro-campo">
+        <mat-label>Código</mat-label>
+        <input matInput formControlName="codigo">
+    </mat-form-field>
+    <mat-form-field class="filtro-campo filtro-descricao">
+        <mat-label>Descrição</mat-label>
+        <input matInput formControlName="descricao">
+    </mat-form-field>
+    <mat-form-field class="filtro-campo">
+        <mat-label>Unidade</mat-label>
+        <input matInput formControlName="unidade">
+    </mat-form-field>
+    <mat-form-field class="filtro-campo">
+        <mat-label>Período</mat-label>
+        <mat-date-range-input [rangePicker]="periodoPicker">
+            <input matStartDate formControlName="dataInicio" placeholder="Data inicial">
+            <input matEndDate formControlName="dataFim" placeholder="Data final">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="periodoPicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #periodoPicker></mat-date-range-picker>
+    </mat-form-field>
+    <button mat-button type="button" (click)="limparFiltro()">
+        <mat-icon>clear</mat-icon> Limpar
+    </button>
+  </form>
   <div class="table-container mat-elevation-z8">
     <mat-table [dataSource]="dataSource" class="table-result">
 
@@ -42,6 +68,12 @@
             <mat-header-cell *matHeaderCellDef>Descrição</mat-header-cell>
 
             <mat-cell *matCellDef="let element"> {{element.descricao}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="unidade">
+            <mat-header-cell *matHeaderCellDef>Unidade</mat-header-cell>
+
+            <mat-cell *matCellDef="let element"> {{element.local_geral}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="data">
@@ -82,7 +114,7 @@
 
     <mat-paginator #paginator *ngIf="isPagination"
         showFirstLastButtons
-        [pageSizeOptions]="[5, 10, 20, 50, 100]">
+        [pageSizeOptions]="[10, 20, 50, 100]">
     </mat-paginator>
   </div>
 </div>

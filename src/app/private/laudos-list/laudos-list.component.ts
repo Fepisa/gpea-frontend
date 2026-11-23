@@ -1,10 +1,12 @@
 import { Component, Input, OnInit, Output, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { DetalheComponent } from './detalhe.component';
 import { ImageService } from '../services/image.service';
 import { LaudoService } from '../services/laudo.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-laudos-list',
@@ -15,7 +17,7 @@ import { LaudoService } from '../services/laudo.service';
 export class LaudosListComponent implements OnInit {
 
   contentLoaded = false;
-  displayedColumns: string[] = ['visualiza', 'codigo', 'descricao', 'data', 'acoes'];
+  displayedColumns: string[] = ['visualiza', 'codigo', 'descricao', 'unidade', 'data', 'acoes'];
   expandedRow!: number;
   userRoleAdmin: boolean = false;
 
@@ -29,9 +31,20 @@ export class LaudosListComponent implements OnInit {
 
   @ViewChildren('matrow', { read: ViewContainerRef }) containers: any;
 
-  constructor(private router: Router, private service: LaudoService, private imageService: ImageService) {
+  filtro: FormGroup;
+
+  constructor(private router: Router, private service: LaudoService, private imageService: ImageService,
+    private formBuilder: FormBuilder) {
     this.contentLoaded = false;
     this.isPagination = false;
+    this.filtro = this.formBuilder.group({
+      codigo: [''],
+      descricao: [''],
+      unidade: [''],
+      dataInicio: [null],
+      dataFim: [null]
+    });
+    this.filtro.valueChanges.subscribe(() => this.aplicarFiltro());
   }
 
   ngOnInit(): void {
@@ -50,18 +63,81 @@ export class LaudosListComponent implements OnInit {
     this.userRoleAdmin = roles.find((element: any) => element === 'Admin');
     if (this.userRoleAdmin) {
       this.service.getLaudos().subscribe(result => {
-        this.dataSource = new MatTableDataSource<any>(result.data);
+        this.dataSource = this.criarDataSource(result.data);
         this.contentLoaded = true;
         this.isPagination = true;
         this.expandedRow = -1;
       });
     } else {
       this.service.getLaudoByLocalGeralAndContratante(auth.local, auth.empresa).subscribe(result => {
-        this.dataSource = new MatTableDataSource<any>(result.data);
+        this.dataSource = this.criarDataSource(result.data);
         this.contentLoaded = true;
         this.isPagination = true;
         this.expandedRow = -1;
       });
+    }
+  }
+
+  criarDataSource(data: any[]): MatTableDataSource<any> {
+    const dataSource = new MatTableDataSource<any>(data);
+    dataSource.filterPredicate = (element: any, filter: string) => this.filtrarLaudo(element, JSON.parse(filter));
+    dataSource.filter = this.valorFiltro();
+    return dataSource;
+  }
+
+  valorFiltro(): string {
+    const { codigo, descricao, unidade, dataInicio, dataFim } = this.filtro.value;
+    return JSON.stringify({
+      codigo: (codigo || '').trim().toLowerCase(),
+      descricao: (descricao || '').trim().toLowerCase(),
+      unidade: (unidade || '').trim().toLowerCase(),
+      dataInicio: dataInicio ? moment(dataInicio).format('YYYY-MM-DD') : null,
+      dataFim: dataFim ? moment(dataFim).format('YYYY-MM-DD') : null
+    });
+  }
+
+  filtrarLaudo(element: any, filtro: any): boolean {
+    if (filtro.codigo && !String(element.codigo ?? '').toLowerCase().includes(filtro.codigo)) {
+      return false;
+    }
+    if (filtro.descricao && !String(element.descricao ?? '').toLowerCase().includes(filtro.descricao)) {
+      return false;
+    }
+    if (filtro.unidade && !String(element.local_geral ?? '').toLowerCase().includes(filtro.unidade)) {
+      return false;
+    }
+    if (filtro.dataInicio || filtro.dataFim) {
+      const data = moment(element.data, 'DD/MM/YYYY', true);
+      if (!data.isValid()) {
+        return false;
+      }
+      if (filtro.dataInicio && data.isBefore(moment(filtro.dataInicio, 'YYYY-MM-DD'), 'day')) {
+        return false;
+      }
+      if (filtro.dataFim && data.isAfter(moment(filtro.dataFim, 'YYYY-MM-DD'), 'day')) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  aplicarFiltro(): void {
+    if (!(this.dataSource instanceof MatTableDataSource)) {
+      return;
+    }
+    this.fecharDetalhe();
+    this.dataSource.filter = this.valorFiltro();
+    this.dataSource.paginator?.firstPage();
+  }
+
+  limparFiltro(): void {
+    this.filtro.reset({ codigo: '', descricao: '', unidade: '', dataInicio: null, dataFim: null });
+  }
+
+  fecharDetalhe(): void {
+    if (this.expandedRow != null && this.expandedRow !== -1) {
+      this.containers.toArray()[this.expandedRow]?.clear();
+      this.expandedRow = -1;
     }
   }
 
