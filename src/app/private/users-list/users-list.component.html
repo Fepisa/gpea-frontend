@@ -1,83 +1,88 @@
-<div class="inner-content">
+<div class="gp-page">
+  <div class="gp-page-header">
     <div>
-      <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="novoUser()" 
-          *ngIf="userRoleAdmin">
-          Novo Usuário
-      </button>
-      <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="laudos()">
-          Laudos
-      </button>
-      <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="logout()">
-          Sair
-      </button>
+      <h1 class="gp-page-title">Usuários</h1>
+      <p class="gp-page-subtitle">
+        {{ userRoleAdmin ? 'Gerencie os usuários e suas permissões' : 'Dados da sua conta' }}
+      </p>
     </div>
-    <div class="table-container mat-elevation-z8">
-      <mat-table [dataSource]="dataSource" class="table-result">
-
-          <ng-container matColumnDef="visualiza">
-              <mat-header-cell *matHeaderCellDef></mat-header-cell>
-              <mat-cell *matCellDef="let row; let index=index">
-                  <button mat-icon-button (click)="expandRow(index, row)">
-                      <mat-icon aria-label="Botão de visualização">
-                          add
-                      </mat-icon>
-                  </button>
-              </mat-cell>
-          </ng-container>
-  
-          <ng-container matColumnDef="name">
-              <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
-  
-              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
-          </ng-container>
-  
-          <ng-container matColumnDef="email">
-              <mat-header-cell *matHeaderCellDef>E-mail</mat-header-cell>
-  
-              <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="empresa">
-              <mat-header-cell *matHeaderCellDef>Empresa</mat-header-cell>
-  
-              <mat-cell *matCellDef="let element"> {{element.empresa}} </mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="local">
-              <mat-header-cell *matHeaderCellDef>Local</mat-header-cell>
-  
-              <mat-cell *matCellDef="let element"> {{element.local}} </mat-cell>
-          </ng-container>
-    
-          <ng-container matColumnDef="acoes">
-              <mat-header-cell mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
-              <mat-cell *matCellDef="let element">
-  
-                  <button mat-icon-button title="Editar" (click)="editarUser(element.id)">
-                      <mat-icon aria-label="Botão de Edição">
-                          mode
-                      </mat-icon>
-                  </button>
-              </mat-cell>
-          </ng-container>
-        
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;" #matrow></mat-row>
-      </mat-table>
-  
-      <ngx-skeleton-loader *ngIf="!contentLoaded"
-                           count="5" animation="progress"
-                           [theme]="{
-                           height: '48px',
-                           'background-color': '#E4E4E4',
-                           'margin-bottom': '40px'
-      }">
-  
-      </ngx-skeleton-loader>
-  
-      <mat-paginator #paginator *ngIf="isPagination"
-          showFirstLastButtons
-          [pageSizeOptions]="[10, 20, 50, 100]">
-      </mat-paginator>
+    <div class="gp-page-actions">
+      <button mat-flat-button type="button" class="gp-btn-primary" (click)="novoUser()" *ngIf="userRoleAdmin">
+        <mat-icon>person_add</mat-icon> Novo Usuário
+      </button>
+      <button mat-stroked-button type="button" (click)="laudos()">
+        <mat-icon>description</mat-icon> Laudos
+      </button>
+      <button mat-stroked-button type="button" (click)="logout()">
+        <mat-icon>logout</mat-icon> Sair
+      </button>
     </div>
   </div>
+
+  <div class="gp-card gp-table-card">
+    <mat-table [dataSource]="dataSource">
+
+      <ng-container matColumnDef="visualiza">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let row; let index=index">
+          <button mat-icon-button type="button" (click)="expandRow(index, row)"
+            [title]="expandedRow === index ? 'Ocultar permissão' : 'Ver permissão'">
+            <mat-icon>{{ expandedRow === index ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <div class="user-name">
+            <span class="user-avatar">{{ (element.name || '?').charAt(0) | uppercase }}</span>
+            <span>{{element.name}}</span>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef>E-mail</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="empresa">
+        <mat-header-cell *matHeaderCellDef>Empresa</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.empresa}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="local">
+        <mat-header-cell *matHeaderCellDef>Local</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.local}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <mat-header-cell *matHeaderCellDef class="gp-actions-cell">Ações</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="gp-actions-cell">
+          <button mat-icon-button type="button" title="Editar" (click)="editarUser(element.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" #matrow></mat-row>
+    </mat-table>
+
+    <ngx-skeleton-loader *ngIf="!contentLoaded" class="gp-skeleton"
+      count="5" animation="progress"
+      [theme]="{ height: '40px', 'background-color': '#EEEEEE', 'margin-bottom': '12px', 'border-radius': '6px' }">
+    </ngx-skeleton-loader>
+
+    <div class="gp-empty" *ngIf="contentLoaded && !dataSource.filteredData?.length">
+      <mat-icon>person_off</mat-icon>
+      <span>Nenhum usuário encontrado</span>
+    </div>
+
+    <mat-paginator #paginator *ngIf="isPagination"
+      showFirstLastButtons
+      [pageSizeOptions]="[10, 20, 50, 100]">
+    </mat-paginator>
+  </div>
+</div>

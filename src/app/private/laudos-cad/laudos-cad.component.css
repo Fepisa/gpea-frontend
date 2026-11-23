@@ -1,17 +1,23 @@
-.inner-content {
-  padding: 16px;
+.status-laudo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border: 1px solid transparent;
 }
 
-.full-input {
-  width: 40%;
-  margin-right: 2%;
+.status-aprovado {
+  background: #e8f5e9;
+  border-color: #a5d6a7;
+  color: #1b5e20;
 }
 
-.cad-form {
-  min-width: 20%;
-  width: 100%;
-}
-
-.hidden-column {
-  display: none;
+.status-reprovado {
+  background: #fdecea;
+  border-color: #ef9a9a;
+  color: #b71c1c;
 }

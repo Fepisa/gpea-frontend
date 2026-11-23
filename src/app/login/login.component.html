@@ -1,40 +1,40 @@
-<mat-grid-list cols="3">
-  <mat-grid-tile></mat-grid-tile>
-  <mat-grid-tile class="login-element">
-    <div class="login-container">
-      <div class="login-box-header">GPEA SCAN</div>
-      <form [formGroup]="loginForm" (ngSubmit)="doLogin()">
-        <div class="login-box-body">
-          <mat-grid-list cols="9" rowHeight="75px">
-            <mat-grid-tile [rowspan]="1" class="login-icon">
-              <mat-icon>lock</mat-icon>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="7">
-              <mat-form-field class="justifier">
-                <input matInput placeholder="E-mail" formControlName="email" required>
-              </mat-form-field>
-            </mat-grid-tile>
-          </mat-grid-list>
-          <mat-grid-list cols="9" rowHeight="100px">
-            <mat-grid-tile [rowspan]="1" class="login-icon">
-              <mat-icon matSuffix (click)="hide = !hide">
-                {{ hide ? 'visibility' : 'visibility_off'}}
-              </mat-icon>
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="7">
-              <mat-form-field class="justifier">
-                <input matInput placeholder="Senha" [type]="hide ? 'password' : 'text'"
-                  formControlName="password" required>
-              </mat-form-field>
-            </mat-grid-tile>
-          </mat-grid-list>
-          <button mat-raised-button color="primary" class="login-button"
-            type="submit" name="action">
-            <mat-icon>input</mat-icon> Login
-          </button>
-        </div>
-      </form>
+<div class="login-page">
+  <mat-card class="login-card">
+    <div class="login-brand">
+      <h1>GPEA Scan</h1>
     </div>
-  </mat-grid-tile>
-  <mat-grid-tile></mat-grid-tile>
-</mat-grid-list>
+
+    <form *ngIf="loginForm" [formGroup]="loginForm" (ngSubmit)="doLogin()" class="login-form" novalidate>
+      <mat-form-field appearance="outline" class="login-field">
+        <mat-label>E-mail</mat-label>
+        <mat-icon matPrefix class="field-icon">mail_outline</mat-icon>
+        <input matInput type="email" formControlName="email" autocomplete="username" required>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Informe o e-mail</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="login-field">
+        <mat-label>Senha</mat-label>
+        <mat-icon matPrefix class="field-icon">lock_outline</mat-icon>
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password"
+          autocomplete="current-password" required>
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide"
+          [attr.aria-label]="hide ? 'Mostrar senha' : 'Ocultar senha'">
+          <mat-icon>{{ hide ? 'visibility' : 'visibility_off' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Informe a senha</mat-error>
+      </mat-form-field>
+
+      <div class="login-error" *ngIf="errorMessage" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <button mat-flat-button class="login-button" type="submit" [disabled]="loading">
+        <mat-spinner *ngIf="loading" diameter="22" class="login-spinner"></mat-spinner>
+        <span *ngIf="!loading">Entrar</span>
+      </button>
+    </form>
+  </mat-card>
+
+  <footer class="login-footer">© {{ currentYear }} GPEA</footer>
+</div>

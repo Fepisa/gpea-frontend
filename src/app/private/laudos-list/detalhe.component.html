@@ -1,28 +1,20 @@
-<div class="table-container mat-elevation-z8">
-    <mat-table [dataSource]="dataSourceDetalhe">
+<div class="detalhe-titulo">Imagens do laudo</div>
 
-        <ng-container matColumnDef="image">
-            <mat-header-cell *matHeaderCellDef>Image</mat-header-cell>
-
-            <mat-cell *matCellDef="let element">
-                <a [attr.href]="element.image" target="_blank">
-                    <img [src]="element.image" style="width: 200px; height: 200px">
-                </a>
-            </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="acoes">
-            <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <button mat-icon-button title="Excluir" (click)="deleteImagem(element.id)" *ngIf="parentComponent.userRoleAdmin">
-                    <mat-icon aria-label="Botão de Exclusão">
-                        delete
-                    </mat-icon>
-                </button>
-            </mat-cell>
-        </ng-container>
-      
-        <mat-header-row *matHeaderRowDef="displayedColumnsDetalhe"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumnsDetalhe;"></mat-row>
-    </mat-table>
+<div class="galeria" *ngIf="dataSourceDetalhe?.data?.length; else semImagens">
+  <div class="galeria-item" *ngFor="let element of dataSourceDetalhe.data">
+    <a [attr.href]="element.image" target="_blank" rel="noopener" title="Abrir imagem em nova aba">
+      <img [src]="element.image" alt="Imagem do laudo">
+    </a>
+    <button mat-mini-fab type="button" class="galeria-excluir" title="Excluir imagem"
+      (click)="deleteImagem(element.id)" *ngIf="parentComponent?.userRoleAdmin">
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  </div>
 </div>
+
+<ng-template #semImagens>
+  <div class="sem-imagens">
+    <mat-icon>image_not_supported</mat-icon>
+    <span>Nenhuma imagem cadastrada para este laudo</span>
+  </div>
+</ng-template>

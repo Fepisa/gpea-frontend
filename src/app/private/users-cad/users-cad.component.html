@@ -1,39 +1,69 @@
-<div class="inner-content">
-    <form [formGroup]="formulario" class="cad-form">
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Nome" formControlName="name">
+<div class="gp-page">
+  <div class="gp-page-header">
+    <div>
+      <h1 class="gp-page-title">{{ edicao ? 'Editar Usuário' : 'Novo Usuário' }}</h1>
+      <p class="gp-page-subtitle">Dados de acesso e vínculo do usuário</p>
+    </div>
+    <div class="gp-page-actions">
+      <button mat-stroked-button type="button" (click)="voltar()">
+        <mat-icon>arrow_back</mat-icon> Voltar
+      </button>
+    </div>
+  </div>
+
+  <form [formGroup]="formulario" class="gp-card">
+    <div class="gp-section-title"><mat-icon>person</mat-icon> Dados pessoais</div>
+    <div class="gp-form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name">
       </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="E-mail" formControlName="email" type="email">
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <mat-icon matPrefix class="campo-icone">mail_outline</mat-icon>
+        <input matInput formControlName="email" type="email" autocomplete="off">
       </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Senha" [type]="hide ? 'password' : 'text'" formControlName="password">
-        <mat-icon matSuffix (click)="hide = !hide">
-            {{ hide ? 'visibility' : 'visibility_off'}}
-        </mat-icon>
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Confirmar Senha" [type]="hide_c ? 'password' : 'text'" formControlName="c_password">
-        <mat-icon matSuffix (click)="hide_c = !hide_c">
-            {{ hide_c ? 'visibility' : 'visibility_off'}}
-        </mat-icon>
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Empresa" formControlName="empresa">
-      </mat-form-field>
-      <mat-form-field class="full-input">
-        <input matInput placeholder="Local" formControlName="local">
-      </mat-form-field>
-      <div>
-        <button mat-raised-button name="action" (click)="save()">
-            <mat-icon>save</mat-icon> Salvar
+    </div>
+
+    <div class="gp-section-title"><mat-icon>lock</mat-icon> Senha</div>
+    <div class="gp-form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" autocomplete="new-password">
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide"
+          [attr.aria-label]="hide ? 'Mostrar senha' : 'Ocultar senha'">
+          <mat-icon>{{ hide ? 'visibility' : 'visibility_off' }}</mat-icon>
         </button>
-        <button mat-raised-button name="limpar" (click)="reset()">
-            <mat-icon>delete</mat-icon> Limpar
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Confirmar Senha</mat-label>
+        <input matInput [type]="hide_c ? 'password' : 'text'" formControlName="c_password" autocomplete="new-password">
+        <button mat-icon-button matSuffix type="button" (click)="hide_c = !hide_c"
+          [attr.aria-label]="hide_c ? 'Mostrar senha' : 'Ocultar senha'">
+          <mat-icon>{{ hide_c ? 'visibility' : 'visibility_off' }}</mat-icon>
         </button>
-        <button mat-raised-button name="voltar" (click)="voltar()">
-            <mat-icon>arrow_back</mat-icon> Voltar
-        </button>
-      </div>
-    </form>
+      </mat-form-field>
+    </div>
+
+    <div class="gp-section-title"><mat-icon>business</mat-icon> Vínculo</div>
+    <div class="gp-form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Empresa</mat-label>
+        <input matInput formControlName="empresa">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Local</mat-label>
+        <input matInput formControlName="local">
+      </mat-form-field>
+    </div>
+
+    <div class="gp-form-footer">
+      <button mat-stroked-button type="button" (click)="reset()">
+        <mat-icon>cleaning_services</mat-icon> Limpar
+      </button>
+      <button mat-flat-button type="button" class="gp-btn-primary" (click)="save()">
+        <mat-icon>save</mat-icon> Salvar
+      </button>
+    </div>
+  </form>
 </div>

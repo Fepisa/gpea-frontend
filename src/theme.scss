@@ -1,0 +1,17 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$gpea-primary: mat.define-palette(mat.$grey-palette, 600, 300, 800);
+$gpea-accent: mat.define-palette(mat.$grey-palette, 700, 400, 900);
+$gpea-warn: mat.define-palette(mat.$red-palette, 700);
+
+$gpea-theme: mat.define-light-theme((
+  color: (
+    primary: $gpea-primary,
+    accent: $gpea-accent,
+    warn: $gpea-warn,
+  ),
+));
+
+@include mat.all-component-themes($gpea-theme);

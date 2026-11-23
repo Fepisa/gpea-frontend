@@ -1,16 +1,15 @@
-<div class="inner-content">
-    <form [formGroup]="formulario" class="cad-form">
-      <mat-radio-group aria-label="Selecione uma opção" formControlName="role" *ngIf="userRoleAdmin">
-        <mat-radio-button value="Viewer" class="radio-btns">Leitor</mat-radio-button>
-        <mat-radio-button value="Admin" class="radio-btns">Administrador</mat-radio-button>
-      </mat-radio-group>
-      <mat-form-field class="full-input" *ngIf="!userRoleAdmin">
-        <input matInput placeholder="Permissão" formControlName="role">
-      </mat-form-field>
-      <div class="btns" *ngIf="userRoleAdmin">
-        <button mat-raised-button name="action" (click)="updateRole()">
-            <mat-icon>save</mat-icon> Atualizar
-        </button>
-      </div>
-    </form>
-</div>
+<form [formGroup]="formulario" class="role-form">
+  <div class="role-titulo">Permissão de acesso</div>
+  <div class="role-conteudo">
+    <mat-radio-group aria-label="Selecione uma opção" formControlName="role" *ngIf="userRoleAdmin" class="role-opcoes">
+      <mat-radio-button value="Viewer">Leitor</mat-radio-button>
+      <mat-radio-button value="Admin">Administrador</mat-radio-button>
+    </mat-radio-group>
+    <span class="role-badge" *ngIf="!userRoleAdmin">
+      <mat-icon>shield</mat-icon> {{ formulario.get('role')?.value }}
+    </span>
+    <button mat-flat-button type="button" class="gp-btn-primary role-salvar" (click)="updateRole()" *ngIf="userRoleAdmin">
+      <mat-icon>save</mat-icon> Atualizar
+    </button>
+  </div>
+</form>

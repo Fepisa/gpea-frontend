@@ -1,120 +1,122 @@
-<div class="inner-content">
-  <div>
-    <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="novoLaudo()"
-        *ngIf="userRoleAdmin">
-        Novo Laudo
-    </button>
-    <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="importarLaudo()"
-        *ngIf="userRoleAdmin">
-        Importar Laudos
-    </button>
-    <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="exportarLaudo()">
-        Exportar Laudos
-    </button>
-    <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="usuarios()">
-        Usuários
-    </button>
-    <button mat-raised-button type="button" class="btn btn-success pull-right" (click)="logout()">
-        Sair
-    </button>
+<div class="gp-page">
+  <div class="gp-page-header">
+    <div>
+      <h1 class="gp-page-title">Laudos</h1>
+      <p class="gp-page-subtitle">Consulte, filtre e gerencie os laudos cadastrados</p>
+    </div>
+    <div class="gp-page-actions">
+      <button mat-flat-button type="button" class="gp-btn-primary" (click)="novoLaudo()" *ngIf="userRoleAdmin">
+        <mat-icon>add</mat-icon> Novo Laudo
+      </button>
+      <button mat-stroked-button type="button" (click)="importarLaudo()" *ngIf="userRoleAdmin">
+        <mat-icon>upload_file</mat-icon> Importar
+      </button>
+      <button mat-stroked-button type="button" (click)="exportarLaudo()">
+        <mat-icon>download</mat-icon> Exportar
+      </button>
+      <button mat-stroked-button type="button" (click)="usuarios()">
+        <mat-icon>group</mat-icon> Usuários
+      </button>
+      <button mat-stroked-button type="button" (click)="logout()">
+        <mat-icon>logout</mat-icon> Sair
+      </button>
+    </div>
   </div>
-  <form class="filtro-container" [formGroup]="filtro">
-    <mat-form-field class="filtro-campo">
+
+  <div class="gp-card filtro-card">
+    <div class="gp-section-title"><mat-icon>filter_list</mat-icon> Filtros</div>
+    <form class="filtro-container" [formGroup]="filtro">
+      <mat-form-field appearance="outline" class="filtro-campo">
         <mat-label>Código</mat-label>
         <input matInput formControlName="codigo">
-    </mat-form-field>
-    <mat-form-field class="filtro-campo filtro-descricao">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="filtro-campo filtro-descricao">
         <mat-label>Descrição</mat-label>
         <input matInput formControlName="descricao">
-    </mat-form-field>
-    <mat-form-field class="filtro-campo">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="filtro-campo">
         <mat-label>Unidade</mat-label>
         <input matInput formControlName="unidade">
-    </mat-form-field>
-    <mat-form-field class="filtro-campo">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="filtro-campo">
         <mat-label>Período</mat-label>
         <mat-date-range-input [rangePicker]="periodoPicker">
-            <input matStartDate formControlName="dataInicio" placeholder="Data inicial">
-            <input matEndDate formControlName="dataFim" placeholder="Data final">
+          <input matStartDate formControlName="dataInicio" placeholder="Data inicial">
+          <input matEndDate formControlName="dataFim" placeholder="Data final">
         </mat-date-range-input>
         <mat-datepicker-toggle matSuffix [for]="periodoPicker"></mat-datepicker-toggle>
         <mat-date-range-picker #periodoPicker></mat-date-range-picker>
-    </mat-form-field>
-    <button mat-button type="button" (click)="limparFiltro()">
+      </mat-form-field>
+      <button mat-stroked-button type="button" class="filtro-limpar" (click)="limparFiltro()">
         <mat-icon>clear</mat-icon> Limpar
-    </button>
-  </form>
-  <div class="table-container mat-elevation-z8">
-    <mat-table [dataSource]="dataSource" class="table-result">
+      </button>
+    </form>
+  </div>
 
-        <ng-container matColumnDef="visualiza">
-            <mat-header-cell *matHeaderCellDef></mat-header-cell>
-            <mat-cell *matCellDef="let row; let index=index">
-                <button mat-icon-button (click)="expandRow(index, row)">
-                    <mat-icon aria-label="Botão de visualização">
-                        add
-                    </mat-icon>
-                </button>
-            </mat-cell>
-        </ng-container>
+  <div class="gp-card gp-table-card">
+    <mat-table [dataSource]="dataSource">
 
-        <ng-container matColumnDef="codigo">
-            <mat-header-cell *matHeaderCellDef>Código</mat-header-cell>
+      <ng-container matColumnDef="visualiza">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let row; let index=index">
+          <button mat-icon-button type="button" (click)="expandRow(index, row)"
+            [title]="expandedRow === index ? 'Ocultar imagens' : 'Ver imagens'">
+            <mat-icon>{{ expandedRow === index ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
 
-            <mat-cell *matCellDef="let element"> {{element.codigo}} </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="codigo">
+        <mat-header-cell *matHeaderCellDef>Código</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="cell-codigo"> {{element.codigo}} </mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="descricao">
-            <mat-header-cell *matHeaderCellDef>Descrição</mat-header-cell>
+      <ng-container matColumnDef="descricao">
+        <mat-header-cell *matHeaderCellDef>Descrição</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.descricao}} </mat-cell>
+      </ng-container>
 
-            <mat-cell *matCellDef="let element"> {{element.descricao}} </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="unidade">
+        <mat-header-cell *matHeaderCellDef>Unidade</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.local_geral}} </mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="unidade">
-            <mat-header-cell *matHeaderCellDef>Unidade</mat-header-cell>
+      <ng-container matColumnDef="data">
+        <mat-header-cell *matHeaderCellDef>Data</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.data}} </mat-cell>
+      </ng-container>
 
-            <mat-cell *matCellDef="let element"> {{element.local_geral}} </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="acoes">
+        <mat-header-cell *matHeaderCellDef class="gp-actions-cell">Ações</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="gp-actions-cell">
+          <button mat-icon-button type="button" [title]="userRoleAdmin ? 'Editar' : 'Visualizar'"
+            (click)="editarLaudo(element.id)">
+            <mat-icon>{{ userRoleAdmin ? 'edit' : 'visibility' }}</mat-icon>
+          </button>
+          <button mat-icon-button type="button" title="Excluir" class="gp-icon-danger"
+            (click)="deleteLaudo(element.id)" *ngIf="userRoleAdmin">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="data">
-            <mat-header-cell *matHeaderCellDef>Data</mat-header-cell>
-
-            <mat-cell *matCellDef="let element"> {{element.data}} </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="acoes">
-            <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                <button mat-icon-button title="Editar" (click)="editarLaudo(element.id)">
-                    <mat-icon aria-label="Botão de Edição">
-                        mode
-                    </mat-icon>
-                </button>
-                <button mat-icon-button title="Excluir" (click)="deleteLaudo(element.id)" *ngIf="userRoleAdmin">
-                    <mat-icon aria-label="Botão de Exclusão">
-                        delete
-                    </mat-icon>
-                </button>
-            </mat-cell>
-        </ng-container>
-      
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" #matrow></mat-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" #matrow></mat-row>
     </mat-table>
 
-    <ngx-skeleton-loader *ngIf="!contentLoaded"
-                         count="5" animation="progress"
-                         [theme]="{
-                         height: '48px',
-                         'background-color': '#E4E4E4',
-                         'margin-bottom': '40px'
-    }">
-
+    <ngx-skeleton-loader *ngIf="!contentLoaded" class="gp-skeleton"
+      count="5" animation="progress"
+      [theme]="{ height: '40px', 'background-color': '#EEEEEE', 'margin-bottom': '12px', 'border-radius': '6px' }">
     </ngx-skeleton-loader>
 
+    <div class="gp-empty" *ngIf="contentLoaded && !dataSource.filteredData?.length">
+      <mat-icon>search_off</mat-icon>
+      <span>Nenhum laudo encontrado</span>
+    </div>
+
     <mat-paginator #paginator *ngIf="isPagination"
-        showFirstLastButtons
-        [pageSizeOptions]="[10, 20, 50, 100]">
+      showFirstLastButtons
+      [pageSizeOptions]="[10, 20, 50, 100]">
     </mat-paginator>
   </div>
 </div>

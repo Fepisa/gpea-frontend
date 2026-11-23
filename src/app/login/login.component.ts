@@ -12,6 +12,9 @@ export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
   hide = true;
+  loading = false;
+  errorMessage = '';
+  currentYear = new Date().getFullYear();
 
   constructor(private fb: FormBuilder, private as: AuthService, private router: Router) {}
 
@@ -31,6 +34,12 @@ export class LoginComponent implements OnInit {
   }
 
   doLogin() {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+    this.loading = true;
+    this.errorMessage = '';
     this.as.doLogin(this.loginForm.value).subscribe({
       next: (data: any) => {
         const username = this.loginForm.get('email')?.value;
@@ -48,7 +57,8 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        alert('Usuário e/ou senha inválidos!');
+        this.loading = false;
+        this.errorMessage = 'Usuário e/ou senha inválidos!';
       }
     });
   }

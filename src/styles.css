@@ -1,4 +1,226 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #fff;
+  color: #1f2937;
+}
+
+/* ---------- Estrutura das páginas internas ---------- */
+
+.gp-page {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.gp-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.gp-page-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.gp-page-subtitle {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.gp-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gp-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.gp-card + .gp-card {
+  margin-top: 20px;
+}
+
+.gp-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 16px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.gp-section-title mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.gp-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  column-gap: 16px;
+}
+
+.gp-form-grid .gp-span-2 {
+  grid-column: span 2;
+}
+
+.gp-form-grid .gp-span-all {
+  grid-column: 1 / -1;
+}
+
+.gp-form-grid .mat-form-field {
+  width: 100%;
+}
+
+.gp-form-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.gp-form-footer .gp-spacer {
+  flex: 1;
+}
+
+/* ---------- Botões ---------- */
+
+.gp-page .mat-flat-button,
+.gp-page .mat-stroked-button {
+  border-radius: 8px;
+  height: 40px;
+}
+
+.gp-page .mat-button-wrapper mat-icon {
+  margin-right: 4px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  vertical-align: -5px;
+}
+
+.gp-btn-primary.mat-flat-button {
+  background-color: #999;
+  color: #000;
+}
+
+.gp-btn-primary.mat-flat-button:hover:not([disabled]) {
+  background-color: #8a8a8a;
+}
+
+.gp-btn-primary.mat-flat-button[disabled] {
+  background-color: #d6d6d6;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.gp-page .mat-stroked-button:not([disabled]) {
+  border-color: #c4c4c4;
+  color: #374151;
+  background: #fff;
+}
+
+.gp-icon-danger {
+  color: #c62828;
+}
+
+/* ---------- Tabelas ---------- */
+
+.gp-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.gp-table-card .mat-table {
+  background: transparent;
+}
+
+.gp-table-card .mat-header-row {
+  background: #fafafa;
+  min-height: 52px;
+}
+
+.gp-table-card .mat-header-cell {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #4b5563;
+}
+
+.gp-table-card .mat-row {
+  transition: background-color 0.15s ease;
+}
+
+.gp-table-card .mat-row:hover {
+  background: #f7f7f7;
+}
+
+.gp-table-card .mat-paginator {
+  border-top: 1px solid #eee;
+}
+
+.gp-table-card .mat-cell.gp-actions-cell,
+.gp-table-card .mat-header-cell.gp-actions-cell {
+  flex: 0 0 120px;
+  justify-content: flex-end;
+}
+
+.gp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.gp-empty mat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.gp-skeleton {
+  display: block;
+  padding: 16px 24px;
+}
+
+@media (max-width: 600px) {
+  .gp-page {
+    padding: 16px 12px;
+  }
+
+  .gp-card {
+    padding: 16px;
+  }
+
+  .gp-form-grid .gp-span-2 {
+    grid-column: 1 / -1;
+  }
+}

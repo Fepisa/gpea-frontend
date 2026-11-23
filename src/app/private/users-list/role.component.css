@@ -1,12 +1,64 @@
-.inner-content {
+:host {
+  display: block;
+  width: 100%;
+  padding: 16px 24px 20px 72px;
+  box-sizing: border-box;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+}
+
+.role-titulo {
+  margin-bottom: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.role-conteudo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+}
+
+.role-opcoes {
+  display: flex;
+  gap: 24px;
+}
+
+.role-salvar {
+  border-radius: 8px;
+}
+
+.role-salvar mat-icon {
+  margin-right: 4px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  vertical-align: -5px;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #e0e0e0;
+  color: #424242;
+  font-weight: 500;
+}
+
+.role-badge mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 600px) {
+  :host {
     padding: 16px;
-    background: rgba(0,0,0,0.1);
-}
-
-.radio-btns {
-    padding-right: 20px;
-}
-
-.btns {
-    margin-top: 20px;
+  }
 }
