@@ -53,11 +53,6 @@
         <ng-container matColumnDef="acoes">
             <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <button mat-icon-button title="Adicionar Imagem" (click)="fileUpload.click()" *ngIf="userRoleAdmin">
-                    <mat-icon aria-label="Botão de Adicionar Imagem">
-                        image
-                    </mat-icon>
-                </button>
                 <button mat-icon-button title="Editar" (click)="editarLaudo(element.id)">
                     <mat-icon aria-label="Botão de Edição">
                         mode
@@ -68,7 +63,6 @@
                         delete
                     </mat-icon>
                 </button>
-                <input type="file" style="display: none" (change)="onFileSelected(element.codigo, $event)" #fileUpload>
             </mat-cell>
         </ng-container>
       

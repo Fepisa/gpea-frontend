@@ -65,25 +65,6 @@ export class LaudosListComponent implements OnInit {
     }
   }
 
-  onFileSelected(codigo: any, event: any) {
-    const file:File = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("codigo", codigo);
-      formData.append("image", file);
-      this.imageService.saveImage(formData).subscribe({
-        next: (result: any) => {
-          alert(result.message);
-          this.loadData();
-        },
-        error: (err) => {
-          console.log(err);
-          alert('Ocorreu um erro ao realizar o upload da imagem!');
-        }
-      });
-    }
-  }
-
   importarLaudo(): void {
     this.router.navigate(['private', 'laudos', 'import']);
   }
