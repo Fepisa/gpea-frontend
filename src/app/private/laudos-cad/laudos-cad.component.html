@@ -1,9 +1,9 @@
 <div class="gp-page">
   <div class="gp-page-header">
     <div>
-      <h1 class="gp-page-title">{{ !userRoleAdmin ? 'Detalhes do Laudo' : (edicao ? 'Editar Laudo' : 'Novo Laudo') }}</h1>
+      <h1 class="gp-page-title">{{ !podeEditar ? 'Detalhes do Laudo' : (edicao ? 'Editar Laudo' : 'Novo Laudo') }}</h1>
       <p class="gp-page-subtitle">
-        {{ userRoleAdmin ? 'Preencha as informações do laudo e salve' : 'Informações do laudo selecionado' }}
+        {{ podeEditar ? 'Preencha as informações do laudo e salve' : 'Informações do laudo selecionado' }}
       </p>
     </div>
     <div class="gp-page-actions">
@@ -92,7 +92,7 @@
       </mat-form-field>
     </div>
 
-    <div class="gp-form-footer" *ngIf="userRoleAdmin">
+    <div class="gp-form-footer" *ngIf="podeEditar">
       <button mat-stroked-button type="button" (click)="reset()">
         <mat-icon>cleaning_services</mat-icon> Limpar
       </button>

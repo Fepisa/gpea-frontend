@@ -21,6 +21,12 @@ export class LaudosCadComponent implements OnInit {
 
   userRoleAdmin: boolean = false;
 
+  podeEditar: boolean = true;
+
+  userLocal: string = '';
+
+  userEmpresa: string = '';
+
   constructor(private route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, 
     private service: LaudoService) { }
 
@@ -31,43 +37,28 @@ export class LaudosCadComponent implements OnInit {
       auth = JSON.parse(lsGpea);
     }
     let roles = auth.roles;
-    this.userRoleAdmin = roles.find((element: any) => element === 'Admin');
+    this.userRoleAdmin = !!roles.find((element: any) => element === 'Admin');
+    this.userLocal = auth.local ?? '';
+    this.userEmpresa = auth.empresa ?? '';
     this.createForm();
     this.edicao = false;
+    this.podeEditar = true;
     this.id = this.route.snapshot.params['id'];
     if (this.id) {
+      this.edicao = true;
       this.service.getLaudoById(this.id).subscribe(result => {
-        if (!this.userRoleAdmin) {
-          this.formulario.get('codigo')?.disable();
-          this.formulario.get('descricao')?.disable();
-          this.formulario.get('capacidade')?.disable();
-          this.formulario.get('massa')?.disable();
-          this.formulario.get('quantidade')?.disable();
-          this.formulario.get('tipo')?.disable();
-          this.formulario.get('local_geral')?.disable();
-          this.formulario.get('local_especifico')?.disable();
-          this.formulario.get('data')?.disable();
-          this.formulario.get('validade')?.disable();
-          this.formulario.get('relatorio')?.disable();
-          this.formulario.get('responsavel_tecnico')?.disable();
-          this.formulario.get('contratante')?.disable();
-          this.formulario.get('contratada')?.disable();
+        if (this.userRoleAdmin) {
+          // Admin: pode alterar qualquer dado do laudo
+          this.podeEditar = true;
+          this.habilitarCampos([]);
+        } else if (this.mesmaUnidade(result.data.local_geral, this.userLocal)) {
+          // Não admin da mesma unidade: não altera código, unidade e contratante
+          this.podeEditar = true;
+          this.habilitarCampos(['codigo', 'local_geral', 'contratante']);
         } else {
-          this.edicao = true;
-          this.formulario.get('codigo')?.enable();
-          this.formulario.get('descricao')?.enable();
-          this.formulario.get('capacidade')?.enable();
-          this.formulario.get('massa')?.enable();
-          this.formulario.get('quantidade')?.enable();
-          this.formulario.get('tipo')?.enable();
-          this.formulario.get('local_geral')?.enable();
-          this.formulario.get('local_especifico')?.enable();
-          this.formulario.get('data')?.enable();
-          this.formulario.get('validade')?.enable();
-          this.formulario.get('relatorio')?.enable();
-          this.formulario.get('responsavel_tecnico')?.enable();
-          this.formulario.get('contratante')?.enable();
-          this.formulario.get('contratada')?.enable();
+          // Não admin de outra unidade: somente leitura
+          this.podeEditar = false;
+          this.desabilitarCampos();
         }
         this.formulario.get('codigo')?.setValue(result.data.codigo);
         this.formulario.get('descricao')?.setValue(result.data.descricao);
@@ -86,7 +77,39 @@ export class LaudosCadComponent implements OnInit {
         this.verificarValidade();
         this.atualizaObservacao();
       });
+    } else if (!this.userRoleAdmin) {
+      // Não admin criando laudo: unidade e contratante fixados conforme o usuário
+      this.fixarCamposUsuario();
     }
+  }
+
+  private camposEditaveis(): string[] {
+    return Object.keys(this.formulario.controls).filter(campo => campo !== 'observacao');
+  }
+
+  private habilitarCampos(bloqueados: string[]) {
+    this.camposEditaveis().forEach(campo => {
+      if (bloqueados.includes(campo)) {
+        this.formulario.get(campo)?.disable();
+      } else {
+        this.formulario.get(campo)?.enable();
+      }
+    });
+  }
+
+  private desabilitarCampos() {
+    this.camposEditaveis().forEach(campo => this.formulario.get(campo)?.disable());
+  }
+
+  private fixarCamposUsuario() {
+    this.formulario.get('local_geral')?.setValue(this.userLocal);
+    this.formulario.get('local_geral')?.disable();
+    this.formulario.get('contratante')?.setValue(this.userEmpresa);
+    this.formulario.get('contratante')?.disable();
+  }
+
+  private mesmaUnidade(a: any, b: any): boolean {
+    return String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase();
   }
 
   createForm() {
@@ -165,7 +188,16 @@ export class LaudosCadComponent implements OnInit {
   }
 
   reset() {
+    const bloqueados: { [campo: string]: any } = {};
+    ['codigo', 'local_geral', 'contratante'].forEach(campo => {
+      const control = this.formulario.get(campo);
+      if (control?.disabled) {
+        bloqueados[campo] = control.value;
+      }
+    });
     this.formulario.reset();
+    // Mantém os valores dos campos que o usuário não pode alterar
+    Object.keys(bloqueados).forEach(campo => this.formulario.get(campo)?.setValue(bloqueados[campo]));
   }
 
   voltar() {

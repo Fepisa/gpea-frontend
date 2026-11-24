@@ -5,7 +5,7 @@
       <p class="gp-page-subtitle">Consulte, filtre e gerencie os laudos cadastrados</p>
     </div>
     <div class="gp-page-actions">
-      <button mat-flat-button type="button" class="gp-btn-primary" (click)="novoLaudo()" *ngIf="userRoleAdmin">
+      <button mat-flat-button type="button" class="gp-btn-primary" (click)="novoLaudo()">
         <mat-icon>add</mat-icon> Novo Laudo
       </button>
       <button mat-stroked-button type="button" (click)="importarLaudo()" *ngIf="userRoleAdmin">
@@ -89,9 +89,9 @@
       <ng-container matColumnDef="acoes">
         <mat-header-cell *matHeaderCellDef class="gp-actions-cell">Ações</mat-header-cell>
         <mat-cell *matCellDef="let element" class="gp-actions-cell">
-          <button mat-icon-button type="button" [title]="userRoleAdmin ? 'Editar' : 'Visualizar'"
+          <button mat-icon-button type="button" [title]="podeEditar(element) ? 'Editar' : 'Visualizar'"
             (click)="editarLaudo(element.id)">
-            <mat-icon>{{ userRoleAdmin ? 'edit' : 'visibility' }}</mat-icon>
+            <mat-icon>{{ podeEditar(element) ? 'edit' : 'visibility' }}</mat-icon>
           </button>
           <button mat-icon-button type="button" title="Excluir" class="gp-icon-danger"
             (click)="deleteLaudo(element.id)" *ngIf="userRoleAdmin">

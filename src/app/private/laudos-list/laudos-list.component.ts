@@ -21,6 +21,8 @@ export class LaudosListComponent implements OnInit {
   expandedRow!: number;
   userRoleAdmin: boolean = false;
 
+  userLocal: string = '';
+
   dataSource: any = [];
   @Input('isPagination') isPagination!: boolean;
   @ViewChild('paginator', {static: false}) set paginator(paginator: MatPaginator) {
@@ -60,7 +62,8 @@ export class LaudosListComponent implements OnInit {
       auth = JSON.parse(lsGpea);
     }
     let roles = auth.roles;
-    this.userRoleAdmin = roles.find((element: any) => element === 'Admin');
+    this.userRoleAdmin = !!roles.find((element: any) => element === 'Admin');
+    this.userLocal = auth.local ?? '';
     if (this.userRoleAdmin) {
       this.service.getLaudos().subscribe(result => {
         this.dataSource = this.criarDataSource(result.data);
@@ -158,6 +161,13 @@ export class LaudosListComponent implements OnInit {
 
   novoLaudo(): void {
     this.router.navigate(['private', 'laudo']);
+  }
+
+  podeEditar(element: any): boolean {
+    if (this.userRoleAdmin) {
+      return true;
+    }
+    return String(element?.local_geral ?? '').trim().toLowerCase() === String(this.userLocal).trim().toLowerCase();
   }
 
   editarLaudo(id: any): void {
