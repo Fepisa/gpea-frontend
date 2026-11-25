@@ -81,6 +81,11 @@
         <mat-cell *matCellDef="let element"> {{element.local_geral}} </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="local">
+        <mat-header-cell *matHeaderCellDef>Local</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.local_especifico}} </mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="data">
         <mat-header-cell *matHeaderCellDef>Data</mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.data}} </mat-cell>

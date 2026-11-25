@@ -32,7 +32,11 @@
 }
 
 .mat-column-descricao {
-  flex: 3;
+  flex: 2;
+}
+
+.mat-column-local {
+  flex: 1.5;
 }
 
 .mat-column-data {

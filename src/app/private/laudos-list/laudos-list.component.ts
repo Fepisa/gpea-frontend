@@ -17,7 +17,7 @@ import * as moment from 'moment';
 export class LaudosListComponent implements OnInit {
 
   contentLoaded = false;
-  displayedColumns: string[] = ['visualiza', 'codigo', 'descricao', 'unidade', 'data', 'acoes'];
+  displayedColumns: string[] = ['visualiza', 'codigo', 'descricao', 'unidade', 'local', 'data', 'acoes'];
   expandedRow!: number;
   userRoleAdmin: boolean = false;
 
