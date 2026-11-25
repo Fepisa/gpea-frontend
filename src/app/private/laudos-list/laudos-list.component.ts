@@ -22,6 +22,7 @@ export class LaudosListComponent implements OnInit {
   userRoleAdmin: boolean = false;
 
   userLocal: string = '';
+  userEmpresa: string = '';
 
   dataSource: any = [];
   @Input('isPagination') isPagination!: boolean;
@@ -41,7 +42,7 @@ export class LaudosListComponent implements OnInit {
     this.isPagination = false;
     this.filtro = this.formBuilder.group({
       codigo: [''],
-      descricao: [''],
+      local: [''],
       unidade: [''],
       dataInicio: [null],
       dataFim: [null]
@@ -64,21 +65,14 @@ export class LaudosListComponent implements OnInit {
     let roles = auth.roles;
     this.userRoleAdmin = !!roles.find((element: any) => element === 'Admin');
     this.userLocal = auth.local ?? '';
-    if (this.userRoleAdmin) {
-      this.service.getLaudos().subscribe(result => {
-        this.dataSource = this.criarDataSource(result.data);
-        this.contentLoaded = true;
-        this.isPagination = true;
-        this.expandedRow = -1;
-      });
-    } else {
-      this.service.getLaudoByLocalGeralAndContratante(auth.local, auth.empresa).subscribe(result => {
-        this.dataSource = this.criarDataSource(result.data);
-        this.contentLoaded = true;
-        this.isPagination = true;
-        this.expandedRow = -1;
-      });
-    }
+    this.userEmpresa = auth.empresa ?? '';
+    // Todos os usuários leem todos os laudos; a alteração é controlada por podeEditar()
+    this.service.getLaudos().subscribe(result => {
+      this.dataSource = this.criarDataSource(result.data);
+      this.contentLoaded = true;
+      this.isPagination = true;
+      this.expandedRow = -1;
+    });
   }
 
   criarDataSource(data: any[]): MatTableDataSource<any> {
@@ -89,10 +83,10 @@ export class LaudosListComponent implements OnInit {
   }
 
   valorFiltro(): string {
-    const { codigo, descricao, unidade, dataInicio, dataFim } = this.filtro.value;
+    const { codigo, local, unidade, dataInicio, dataFim } = this.filtro.value;
     return JSON.stringify({
       codigo: (codigo || '').trim().toLowerCase(),
-      descricao: (descricao || '').trim().toLowerCase(),
+      local: (local || '').trim().toLowerCase(),
       unidade: (unidade || '').trim().toLowerCase(),
       dataInicio: dataInicio ? moment(dataInicio).format('YYYY-MM-DD') : null,
       dataFim: dataFim ? moment(dataFim).format('YYYY-MM-DD') : null
@@ -103,7 +97,7 @@ export class LaudosListComponent implements OnInit {
     if (filtro.codigo && !String(element.codigo ?? '').toLowerCase().includes(filtro.codigo)) {
       return false;
     }
-    if (filtro.descricao && !String(element.descricao ?? '').toLowerCase().includes(filtro.descricao)) {
+    if (filtro.local && !String(element.local_especifico ?? '').toLowerCase().includes(filtro.local)) {
       return false;
     }
     if (filtro.unidade && !String(element.local_geral ?? '').toLowerCase().includes(filtro.unidade)) {
@@ -134,7 +128,7 @@ export class LaudosListComponent implements OnInit {
   }
 
   limparFiltro(): void {
-    this.filtro.reset({ codigo: '', descricao: '', unidade: '', dataInicio: null, dataFim: null });
+    this.filtro.reset({ codigo: '', local: '', unidade: '', dataInicio: null, dataFim: null });
   }
 
   fecharDetalhe(): void {
@@ -167,7 +161,13 @@ export class LaudosListComponent implements OnInit {
     if (this.userRoleAdmin) {
       return true;
     }
-    return String(element?.local_geral ?? '').trim().toLowerCase() === String(this.userLocal).trim().toLowerCase();
+    // Não admin altera somente laudos da mesma unidade (local geral) e contratante
+    return this.mesmoValor(element?.local_geral, this.userLocal)
+      && this.mesmoValor(element?.contratante, this.userEmpresa);
+  }
+
+  private mesmoValor(a: any, b: any): boolean {
+    return String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase();
   }
 
   editarLaudo(id: any): void {

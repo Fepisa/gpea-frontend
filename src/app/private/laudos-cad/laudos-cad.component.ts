@@ -51,12 +51,13 @@ export class LaudosCadComponent implements OnInit {
           // Admin: pode alterar qualquer dado do laudo
           this.podeEditar = true;
           this.habilitarCampos([]);
-        } else if (this.mesmaUnidade(result.data.local_geral, this.userLocal)) {
-          // Não admin da mesma unidade: não altera código, unidade e contratante
+        } else if (this.mesmaUnidade(result.data.local_geral, this.userLocal)
+          && this.mesmaUnidade(result.data.contratante, this.userEmpresa)) {
+          // Não admin da mesma unidade e contratante: não altera código, unidade e contratante
           this.podeEditar = true;
           this.habilitarCampos(['codigo', 'local_geral', 'contratante']);
         } else {
-          // Não admin de outra unidade: somente leitura
+          // Não admin de outra unidade ou contratante: somente leitura
           this.podeEditar = false;
           this.desabilitarCampos();
         }
@@ -75,7 +76,10 @@ export class LaudosCadComponent implements OnInit {
         this.formulario.get('contratante')?.setValue(result.data.contratante);
         this.formulario.get('contratada')?.setValue(result.data.contratada);
         this.verificarValidade();
-        this.atualizaObservacao();
+        // Só grava a observação quando o usuário pode alterar o laudo
+        if (this.podeEditar) {
+          this.atualizaObservacao();
+        }
       });
     } else if (!this.userRoleAdmin) {
       // Não admin criando laudo: unidade e contratante fixados conforme o usuário

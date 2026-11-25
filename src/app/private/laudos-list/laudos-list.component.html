@@ -30,13 +30,13 @@
         <mat-label>Código</mat-label>
         <input matInput formControlName="codigo">
       </mat-form-field>
-      <mat-form-field appearance="outline" class="filtro-campo filtro-descricao">
-        <mat-label>Descrição</mat-label>
-        <input matInput formControlName="descricao">
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="filtro-campo">
+      <mat-form-field appearance="outline" class="filtro-campo filtro-unidade">
         <mat-label>Unidade</mat-label>
         <input matInput formControlName="unidade">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="filtro-campo">
+        <mat-label>Local Específico</mat-label>
+        <input matInput formControlName="local">
       </mat-form-field>
       <mat-form-field appearance="outline" class="filtro-campo">
         <mat-label>Período</mat-label>
@@ -99,7 +99,7 @@
             <mat-icon>{{ podeEditar(element) ? 'edit' : 'visibility' }}</mat-icon>
           </button>
           <button mat-icon-button type="button" title="Excluir" class="gp-icon-danger"
-            (click)="deleteLaudo(element.id)" *ngIf="userRoleAdmin">
+            (click)="deleteLaudo(element.id)" *ngIf="podeEditar(element)">
             <mat-icon>delete_outline</mat-icon>
           </button>
         </mat-cell>
