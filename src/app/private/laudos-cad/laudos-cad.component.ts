@@ -26,6 +26,10 @@ export class LaudosCadComponent implements OnInit {
 
   userId: number | null = null;
 
+  userLocal: string = '';
+
+  userEmpresa: string = '';
+
   usuarios: any[] = [];
 
   constructor(private route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, 
@@ -40,6 +44,8 @@ export class LaudosCadComponent implements OnInit {
     let roles = auth.roles;
     this.userRoleAdmin = !!roles.find((element: any) => element === 'Admin');
     this.userId = auth.id ?? null;
+    this.userLocal = auth.local ?? '';
+    this.userEmpresa = auth.empresa ?? '';
     this.createForm();
     this.carregarUsuarios();
     this.edicao = false;
@@ -84,6 +90,7 @@ export class LaudosCadComponent implements OnInit {
     } else {
       // Criação: responsável pré-selecionado com o usuário logado; só o Admin pode escolher outro
       this.selecionarUsuarioLogado();
+      this.preencherLocalEmpresa();
       if (!this.userRoleAdmin) {
         this.formulario.get('responsavel_id')?.disable();
       }
@@ -107,6 +114,32 @@ export class LaudosCadComponent implements OnInit {
       this.userId = result.data.id;
       this.formulario.get('responsavel_id')?.setValue(this.userId);
     });
+  }
+
+  // Pré-preenche unidade (local geral) e contratante com os dados do usuário logado; continuam editáveis
+  private preencherLocalEmpresa() {
+    if (this.userLocal || this.userEmpresa) {
+      this.aplicarLocalEmpresa(this.userLocal, this.userEmpresa);
+      return;
+    }
+    // Sessões antigas podem não ter local/empresa: busca o usuário logado
+    this.userService.getCurrentUser().subscribe(result => {
+      this.userLocal = result.data.local ?? '';
+      this.userEmpresa = result.data.empresa ?? '';
+      this.aplicarLocalEmpresa(this.userLocal, this.userEmpresa);
+    });
+  }
+
+  private aplicarLocalEmpresa(local: string, empresa: string) {
+    // Não sobrescreve o que o usuário já tiver digitado
+    const localGeral = this.formulario.get('local_geral');
+    const contratante = this.formulario.get('contratante');
+    if (localGeral && !localGeral.value) {
+      localGeral.setValue(local);
+    }
+    if (contratante && !contratante.value) {
+      contratante.setValue(empresa);
+    }
   }
 
   private camposEditaveis(): string[] {
@@ -216,6 +249,7 @@ export class LaudosCadComponent implements OnInit {
     Object.keys(bloqueados).forEach(campo => this.formulario.get(campo)?.setValue(bloqueados[campo]));
     if (!this.edicao) {
       this.selecionarUsuarioLogado();
+      this.preencherLocalEmpresa();
     }
   }
 
