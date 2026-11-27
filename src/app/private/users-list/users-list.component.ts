@@ -17,6 +17,7 @@ export class UsersListComponent implements OnInit {
   displayedColumns: string[] = ['visualiza', 'name', 'email', 'empresa', 'local', 'acoes'];
   expandedRow!: number;
   userRoleAdmin: boolean = false;
+  currentUserEmail: string = '';
 
   dataSource: any = [];
   @Input('isPagination') isPagination!: boolean;
@@ -46,6 +47,7 @@ export class UsersListComponent implements OnInit {
       auth = JSON.parse(lsGpea);
     }
     this.userRoleAdmin = auth.roles.find((element: any) => element === 'Admin');
+    this.currentUserEmail = String(auth.username ?? '').trim().toLowerCase();
     if (this.userRoleAdmin) {
       this.service.getUsers().subscribe(result => {
         this.dataSource = new MatTableDataSource<any>(result.data);
@@ -72,6 +74,31 @@ export class UsersListComponent implements OnInit {
     this.router.navigate(['private', 'user', id]);    
   }
 
+  podeExcluir(element: any): boolean {
+    // Somente admin exclui, e nunca o próprio usuário
+    return !!this.userRoleAdmin
+      && String(element?.email ?? '').trim().toLowerCase() !== this.currentUserEmail;
+  }
+
+  deleteUser(element: any): void {
+    if (!this.podeExcluir(element)) {
+      return;
+    }
+    if (!confirm(`Deseja realmente excluir o usuário ${element.name}?`)) {
+      return;
+    }
+    this.service.deleteUser(element.id).subscribe({
+      next: (data: any) => {
+        alert(data.message);
+        this.loadData();
+      },
+      error: (err) => {
+        console.log(err);
+        alert(err?.error?.message || 'Ocorreu um erro ao excluir o usuário!');
+      }
+    });
+  }
+
   laudos() {
     this.router.navigate(['private', 'laudos']);
   }
@@ -93,7 +120,7 @@ export class UsersListComponent implements OnInit {
       const roleComponent = container.createComponent(RoleComponent);
       roleComponent.instance.id = row.id;
       roleComponent.instance.userRoleAdmin = this.userRoleAdmin;
-      roleComponent.instance.currentRole = row.roles[0].name;
+      roleComponent.instance.currentRole = row.roles?.[0]?.name ?? '';
       roleComponent.instance._ref = roleComponent;
       roleComponent.instance.parentComponent = this;
       this.expandedRow = index;

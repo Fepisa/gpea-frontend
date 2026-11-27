@@ -53,7 +53,8 @@ export class RoleComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        alert('Ocorreu um erro ao atualizar a permissão!');
+        const msg = err?.error?.message;
+        alert('Ocorreu um erro ao atualizar a permissão!' + (msg ? ' ' + msg : ''));
       }
     });
   }

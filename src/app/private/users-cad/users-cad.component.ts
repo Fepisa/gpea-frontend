@@ -34,7 +34,7 @@ export class UsersCadComponent implements OnInit {
       auth = JSON.parse(lsGpea);
     }
     let roles = auth.roles;
-    this.userRoleAdmin = roles.find((element: any) => element === 'Admin');
+    this.userRoleAdmin = !!roles.find((element: any) => element === 'Admin');
     if (this.userRoleAdmin) {
       this.id = this.route.snapshot.params['id'];
       if (this.id) {
@@ -69,7 +69,8 @@ export class UsersCadComponent implements OnInit {
       password: [''],
       c_password: [''],
       empresa: ['', Validators.required],
-      local: ['', Validators.required]
+      local: ['', Validators.required],
+      role: ['Viewer']
     });
   }
 
@@ -83,7 +84,7 @@ export class UsersCadComponent implements OnInit {
           },
           error: (err) => {
             console.log(err);
-            alert('Ocorreu um erro ao atualizar o usuário!');
+            alert(this.mensagemErro('Ocorreu um erro ao atualizar o usuário!', err));
           }
         });
       } else {
@@ -94,7 +95,7 @@ export class UsersCadComponent implements OnInit {
           },
           error: (err) => {
             console.log(err);
-            alert('Ocorreu um erro ao registrar o usuário!');
+            alert(this.mensagemErro('Ocorreu um erro ao registrar o usuário!', err));
           }
         });
       }
@@ -106,14 +107,19 @@ export class UsersCadComponent implements OnInit {
         },
         error: (err) => {
           console.log(err);
-          alert('Ocorreu um erro ao atualizar o usuário!');
+          alert(this.mensagemErro('Ocorreu um erro ao atualizar o usuário!', err));
         }
       });
     }
   }
 
+  private mensagemErro(prefixo: string, err: any): string {
+    const msg = err?.error?.message;
+    return msg ? `${prefixo} ${msg}` : prefixo;
+  }
+
   reset() {
-    this.formulario.reset();
+    this.formulario.reset({ role: 'Viewer' });
   }
 
   voltar() {

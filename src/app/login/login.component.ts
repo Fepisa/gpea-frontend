@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
         expireDate.setSeconds(expireDate.getSeconds() + 86400);
         localStorage.setItem('gpea', JSON.stringify({
           username, 
+          id: data.data.id,
           token: data.data.token, 
           empresa: data.data.empresa,
           local: data.data.local,

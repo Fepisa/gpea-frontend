@@ -2,3 +2,9 @@
   margin-right: 8px;
   color: #9ca3af;
 }
+
+.role-opcoes {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}

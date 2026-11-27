@@ -5,6 +5,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -47,6 +48,7 @@ import { LaudosImportComponent } from './laudos-import/laudos-import.component';
     MatProgressBarModule,
     MatInputModule,
     MatRadioModule,
+    MatSelectModule,
     MatIconModule,
     MatTableModule,
     MatSortModule,

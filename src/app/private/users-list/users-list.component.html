@@ -63,6 +63,10 @@
           <button mat-icon-button type="button" title="Editar" (click)="editarUser(element.id)">
             <mat-icon>edit</mat-icon>
           </button>
+          <button mat-icon-button type="button" title="Excluir" class="gp-icon-danger"
+            (click)="deleteUser(element)" *ngIf="podeExcluir(element)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
         </mat-cell>
       </ng-container>
 

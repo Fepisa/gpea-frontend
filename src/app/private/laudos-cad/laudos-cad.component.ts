@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LaudoService } from '../services/laudo.service';
+import { UserService } from '../services/user.service';
 import * as moment from 'moment';
 
 @Component({
@@ -23,12 +24,12 @@ export class LaudosCadComponent implements OnInit {
 
   podeEditar: boolean = true;
 
-  userLocal: string = '';
+  userId: number | null = null;
 
-  userEmpresa: string = '';
+  usuarios: any[] = [];
 
   constructor(private route: ActivatedRoute, private router: Router, private formBuilder: FormBuilder, 
-    private service: LaudoService) { }
+    private service: LaudoService, private userService: UserService) { }
 
   ngOnInit(): void {
     let auth = null;
@@ -38,28 +39,26 @@ export class LaudosCadComponent implements OnInit {
     }
     let roles = auth.roles;
     this.userRoleAdmin = !!roles.find((element: any) => element === 'Admin');
-    this.userLocal = auth.local ?? '';
-    this.userEmpresa = auth.empresa ?? '';
+    this.userId = auth.id ?? null;
     this.createForm();
+    this.carregarUsuarios();
     this.edicao = false;
     this.podeEditar = true;
     this.id = this.route.snapshot.params['id'];
     if (this.id) {
       this.edicao = true;
       this.service.getLaudoById(this.id).subscribe(result => {
-        if (this.userRoleAdmin) {
-          // Admin: pode alterar qualquer dado do laudo
-          this.podeEditar = true;
-          this.habilitarCampos([]);
-        } else if (this.mesmaUnidade(result.data.local_geral, this.userLocal)
-          && this.mesmaUnidade(result.data.contratante, this.userEmpresa)) {
-          // Não admin da mesma unidade e contratante: não altera código, unidade e contratante
-          this.podeEditar = true;
-          this.habilitarCampos(['codigo', 'local_geral', 'contratante']);
-        } else {
-          // Não admin de outra unidade ou contratante: somente leitura
-          this.podeEditar = false;
+        // Permissão calculada no backend: Admin ou usuário responsável pelo laudo
+        this.podeEditar = !!result.data.pode_editar;
+        if (!this.podeEditar) {
+          // Não é Admin nem responsável: somente leitura
           this.desabilitarCampos();
+        } else if (this.userRoleAdmin) {
+          // Admin: pode alterar qualquer dado do laudo, inclusive o responsável
+          this.habilitarCampos([]);
+        } else {
+          // Responsável (não admin): não altera código nem responsável
+          this.habilitarCampos(['codigo', 'responsavel_id']);
         }
         this.formulario.get('codigo')?.setValue(result.data.codigo);
         this.formulario.get('descricao')?.setValue(result.data.descricao);
@@ -75,16 +74,39 @@ export class LaudosCadComponent implements OnInit {
         this.formulario.get('responsavel_tecnico')?.setValue(result.data.responsavel_tecnico);
         this.formulario.get('contratante')?.setValue(result.data.contratante);
         this.formulario.get('contratada')?.setValue(result.data.contratada);
+        this.formulario.get('responsavel_id')?.setValue(result.data.responsavel_id);
         this.verificarValidade();
         // Só grava a observação quando o usuário pode alterar o laudo
         if (this.podeEditar) {
           this.atualizaObservacao();
         }
       });
-    } else if (!this.userRoleAdmin) {
-      // Não admin criando laudo: unidade e contratante fixados conforme o usuário
-      this.fixarCamposUsuario();
+    } else {
+      // Criação: responsável pré-selecionado com o usuário logado; só o Admin pode escolher outro
+      this.selecionarUsuarioLogado();
+      if (!this.userRoleAdmin) {
+        this.formulario.get('responsavel_id')?.disable();
+      }
     }
+  }
+
+  private carregarUsuarios() {
+    this.userService.getUserOptions().subscribe({
+      next: (result: any) => this.usuarios = result.data ?? [],
+      error: (err) => console.log(err)
+    });
+  }
+
+  private selecionarUsuarioLogado() {
+    if (this.userId) {
+      this.formulario.get('responsavel_id')?.setValue(this.userId);
+      return;
+    }
+    // Sessões antigas não guardam o id do usuário: busca o usuário logado
+    this.userService.getCurrentUser().subscribe(result => {
+      this.userId = result.data.id;
+      this.formulario.get('responsavel_id')?.setValue(this.userId);
+    });
   }
 
   private camposEditaveis(): string[] {
@@ -105,17 +127,6 @@ export class LaudosCadComponent implements OnInit {
     this.camposEditaveis().forEach(campo => this.formulario.get(campo)?.disable());
   }
 
-  private fixarCamposUsuario() {
-    this.formulario.get('local_geral')?.setValue(this.userLocal);
-    this.formulario.get('local_geral')?.disable();
-    this.formulario.get('contratante')?.setValue(this.userEmpresa);
-    this.formulario.get('contratante')?.disable();
-  }
-
-  private mesmaUnidade(a: any, b: any): boolean {
-    return String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase();
-  }
-
   createForm() {
     this.formulario = this.formBuilder.group({
       codigo: ['', Validators.required],
@@ -132,6 +143,7 @@ export class LaudosCadComponent implements OnInit {
       responsavel_tecnico: ['', Validators.required], 
       contratante: ['', Validators.required],
       contratada: ['', Validators.required],
+      responsavel_id: [null],
       observacao: [{value: '', disabled: true}]
     });
   }
@@ -193,7 +205,7 @@ export class LaudosCadComponent implements OnInit {
 
   reset() {
     const bloqueados: { [campo: string]: any } = {};
-    ['codigo', 'local_geral', 'contratante'].forEach(campo => {
+    ['codigo', 'responsavel_id'].forEach(campo => {
       const control = this.formulario.get(campo);
       if (control?.disabled) {
         bloqueados[campo] = control.value;
@@ -202,6 +214,9 @@ export class LaudosCadComponent implements OnInit {
     this.formulario.reset();
     // Mantém os valores dos campos que o usuário não pode alterar
     Object.keys(bloqueados).forEach(campo => this.formulario.get(campo)?.setValue(bloqueados[campo]));
+    if (!this.edicao) {
+      this.selecionarUsuarioLogado();
+    }
   }
 
   voltar() {

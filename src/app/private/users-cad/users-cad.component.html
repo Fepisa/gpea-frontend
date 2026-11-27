@@ -57,6 +57,14 @@
       </mat-form-field>
     </div>
 
+    <ng-container *ngIf="userRoleAdmin && !edicao">
+      <div class="gp-section-title"><mat-icon>shield</mat-icon> Permissão de acesso</div>
+      <mat-radio-group aria-label="Permissão de acesso" formControlName="role" class="role-opcoes">
+        <mat-radio-button value="Viewer">Leitor</mat-radio-button>
+        <mat-radio-button value="Admin">Administrador</mat-radio-button>
+      </mat-radio-group>
+    </ng-container>
+
     <div class="gp-form-footer">
       <button mat-stroked-button type="button" (click)="reset()">
         <mat-icon>cleaning_services</mat-icon> Limpar

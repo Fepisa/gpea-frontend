@@ -90,6 +90,14 @@
         <mat-label>Contratada</mat-label>
         <input matInput formControlName="contratada">
       </mat-form-field>
+      <mat-form-field appearance="outline" class="gp-span-2">
+        <mat-label>Responsável pelo laudo</mat-label>
+        <mat-select formControlName="responsavel_id">
+          <mat-option *ngFor="let usuario of usuarios" [value]="usuario.id">
+            {{ usuario.name }} ({{ usuario.email }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <div class="gp-form-footer" *ngIf="podeEditar">

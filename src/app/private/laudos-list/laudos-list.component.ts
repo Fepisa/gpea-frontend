@@ -21,8 +21,6 @@ export class LaudosListComponent implements OnInit {
   expandedRow!: number;
   userRoleAdmin: boolean = false;
 
-  userLocal: string = '';
-  userEmpresa: string = '';
 
   dataSource: any = [];
   @Input('isPagination') isPagination!: boolean;
@@ -64,8 +62,6 @@ export class LaudosListComponent implements OnInit {
     }
     let roles = auth.roles;
     this.userRoleAdmin = !!roles.find((element: any) => element === 'Admin');
-    this.userLocal = auth.local ?? '';
-    this.userEmpresa = auth.empresa ?? '';
     // Todos os usuários leem todos os laudos; a alteração é controlada por podeEditar()
     this.service.getLaudos().subscribe(result => {
       this.dataSource = this.criarDataSource(result.data);
@@ -158,17 +154,10 @@ export class LaudosListComponent implements OnInit {
   }
 
   podeEditar(element: any): boolean {
-    if (this.userRoleAdmin) {
-      return true;
-    }
-    // Não admin altera somente laudos da mesma unidade (local geral) e contratante
-    return this.mesmoValor(element?.local_geral, this.userLocal)
-      && this.mesmoValor(element?.contratante, this.userEmpresa);
+    // Permissão calculada no backend: Admin ou usuário responsável pelo laudo
+    return !!element?.pode_editar;
   }
 
-  private mesmoValor(a: any, b: any): boolean {
-    return String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase();
-  }
 
   editarLaudo(id: any): void {
     this.router.navigate(['private', 'laudo', id]);    

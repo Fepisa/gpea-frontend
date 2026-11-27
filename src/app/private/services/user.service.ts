@@ -54,6 +54,20 @@ export class UserService {
     return this.http.get(`${this.uri}/current`, { headers });
   }
 
+  getUserOptions(): Observable<any> {
+    let auth = null;
+    const lsGpea = localStorage.getItem('gpea');
+    if (typeof lsGpea === 'string') {
+      auth = JSON.parse(lsGpea);
+    }
+    let headers = new HttpHeaders({
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ' + auth.token
+    });
+
+    return this.http.get(`${this.uri}/options`, { headers });
+  }
+
   saveUser(data: any): Observable<any> {
     let auth = null;
     const lsGpea = localStorage.getItem('gpea');
