@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../guards/auth.guard';
+import { AdminGuard } from '../guards/admin.guard';
 import { LaudosCadComponent } from './laudos-cad/laudos-cad.component';
 import { LaudosImportComponent } from './laudos-import/laudos-import.component';
 import { LaudosListComponent } from './laudos-list/laudos-list.component';
@@ -26,15 +27,15 @@ const routes: Routes = [
     component: LaudosCadComponent
   }, {
     path: 'users', 
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
     component: UsersListComponent
   }, {
     path: 'user',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
     component: UsersCadComponent
   }, {
     path: 'user/:id',
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
     component: UsersCadComponent
   }, {
     path: '**',

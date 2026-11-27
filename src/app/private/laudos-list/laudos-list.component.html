@@ -14,7 +14,7 @@
       <button mat-stroked-button type="button" (click)="exportarLaudo()">
         <mat-icon>download</mat-icon> Exportar
       </button>
-      <button mat-stroked-button type="button" (click)="usuarios()">
+      <button mat-stroked-button type="button" (click)="usuarios()" *ngIf="userRoleAdmin">
         <mat-icon>group</mat-icon> Usuários
       </button>
       <button mat-stroked-button type="button" (click)="logout()">

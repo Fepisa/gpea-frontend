@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('gpea', JSON.stringify({
           username, 
           id: data.data.id,
+          name: data.data.name,
           token: data.data.token, 
           empresa: data.data.empresa,
           local: data.data.local,

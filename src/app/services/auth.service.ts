@@ -31,4 +31,24 @@ export class AuthService {
     return false;
   }
 
+  /** Nome do usuário logado; sessões antigas sem nome usam o e-mail. Vazio se não autenticado. */
+  userName(): string {
+    if (!this.userAuthenticated()) {
+      return '';
+    }
+    const lsGpea = localStorage.getItem('gpea');
+    const auth = typeof lsGpea === 'string' ? JSON.parse(lsGpea) : null;
+    return String(auth?.name || auth?.username || '');
+  }
+
+  userIsAdmin(): boolean {
+    let auth = null;
+    const lsGpea = localStorage.getItem('gpea');
+    if (typeof lsGpea === 'string') {
+      auth = JSON.parse(lsGpea);
+    }
+    const roles: any[] = Array.isArray(auth?.roles) ? auth.roles : [];
+    return roles.includes('Admin');
+  }
+
 }

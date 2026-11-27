@@ -1,6 +1,10 @@
 <mat-toolbar>
   <span>GPEA Scan</span>
   <span class="tb-spacer"></span>
+  <span class="tb-user" *ngIf="userName" [title]="userName">
+    <mat-icon>account_circle</mat-icon>
+    <span class="tb-user-name">{{ userName }}</span>
+  </span>
 </mat-toolbar>
 
 <div class="container">
